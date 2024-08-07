@@ -1,38 +1,54 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    background-color: #f7f7f7;
     margin: 0;
     padding: 0;
 }
 header {
-    background-color: #4CAF50;
-    color: white;
+    background-color: #A7D7C5;
+    color: #FFFFFF;
     padding: 1rem;
     text-align: center;
 }
 main {
     padding: 2rem;
 }
-input[type="text"] {
+input[type="text"], input[type="date"] {
     width: calc(100% - 1rem);
     padding: 0.5rem;
     margin-top: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 button {
     margin-top: 1rem;
     padding: 0.5rem 1rem;
-    background-color: #4CAF50;
+    background-color: #A7D7C5;
     color: white;
     border: none;
+    border-radius: 4px;
     cursor: pointer;
 }
 button:hover {
-    background-color: #45a049;
+    background-color: #90C8AC;
+}
+.week {
+    background-color: #E7F2F8;
+    margin: 1rem 0;
+    padding: 1rem;
+    border-radius: 8px;
+}
+.day {
+    background-color: #FFFFFF;
+    margin: 0.5rem 0;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
 }
 .meal-section {
-    margin-top: 1rem;
+    margin-top: 0.5rem;
 }
-.meal-section h3 {
+.meal-section h5 {
     margin-bottom: 0.5rem;
 }
 .meal-section label {

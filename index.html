@@ -3,43 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>다이어트 식단 체크</title>
+    <title>4주 다이어트 식단 체크</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
-        <h1>다이어트 식단 체크</h1>
+        <h1>4주 다이어트 식단 체크</h1>
     </header>
     <main>
         <div id="user-info">
             <p>사용자 이름을 입력해주세요:</p>
             <input type="text" id="user-name" placeholder="사용자 이름">
+            <p>시작일을 입력해주세요:</p>
+            <input type="date" id="start-date">
             <button id="start-button">시작하기</button>
         </div>
-        <div id="meal-plan" style="display: none;">
+        <div id="calendar" style="display: none;">
             <h2 id="user-greeting"></h2>
-            <div class="meal-section">
-                <h3>아침</h3>
-                <label><input type="checkbox" class="meal-checkbox" data-meal="breakfast1"> 식단 1</label>
-                <label><input type="checkbox" class="meal-checkbox" data-meal="breakfast2"> 식단 2</label>
-                <label><input type="checkbox" class="meal-checkbox" data-meal="breakfast3"> 식단 3</label>
-            </div>
-            <div class="meal-section">
-                <h3>점심</h3>
-                <label><input type="checkbox" class="meal-checkbox" data-meal="lunch1"> 식단 1</label>
-                <label><input type="checkbox" class="meal-checkbox" data-meal="lunch2"> 식단 2</label>
-                <label><input type="checkbox" class="meal-checkbox" data-meal="lunch3"> 식단 3</label>
-            </div>
-            <div class="meal-section">
-                <h3>저녁</h3>
-                <label><input type="checkbox" class="meal-checkbox" data-meal="dinner1"> 식단 1</label>
-                <label><input type="checkbox" class="meal-checkbox" data-meal="dinner2"> 식단 2</label>
-                <label><input type="checkbox" class="meal-checkbox" data-meal="dinner3"> 식단 3</label>
-            </div>
-            <div class="meal-section">
-                <h3>간식</h3>
-                <label><input type="checkbox" class="meal-checkbox" data-meal="snack1"> 간식 1</label>
-                <label><input type="checkbox" class="meal-checkbox" data-meal="snack2"> 간식 2</label>
+            <div id="weeks-container">
+                <!-- 주차별 식단 계획이 여기에 추가됩니다 -->
             </div>
         </div>
     </main>
