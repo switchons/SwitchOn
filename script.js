@@ -33,6 +33,14 @@ function generateCalendar(startDate) {
                 </div>
                 <h3>${week + 1}주차</h3>
             `;
+        } else if (week === 0 && day >= 3) {
+            weekDiv.innerHTML = `
+                <div class="week-info">
+                    <p>배고프면 오이, 두부, 무가당요거트, 녹황색 채소는 허용!</p>
+                    <p>4~7일차 허용 식품: 잡곡밥 1/2 혹은 쌀밥 1/3, 생선, 회, 해산물, 닭가슴살, 달걀, 버섯, 미역, 각종 비타민 섭취</p>
+                </div>
+                <h3>${week + 1}주차</h3>
+            `;
         } else {
             weekDiv.innerHTML = `<h3>${week + 1}주차</h3>`;
         }
@@ -96,7 +104,7 @@ function getMealPlan(week, day, meal) {
     if (week === 0 && day >= 3) {
         if (meal === 'lunch') {
             return `
-                <label><input type="checkbox" class="meal-checkbox" data-meal="week${week + 1}-day${day + 1}-${meal}"> 저탄수화물식 (잡곡밥 1/2 혹은 쌀밥 1/3, 생선, 회, 해산물, 닭가슴살, 달걀, 버섯, 미역)</label>
+                <label><input type="checkbox" class="meal-checkbox" data-meal="week${week + 1}-day${day + 1}-${meal}"> 저탄수화물식</label>
             `;
         } else {
             return `
