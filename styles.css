@@ -71,6 +71,11 @@ button:hover {
     border: 1px solid #ddd;
     border-radius: 8px;
 }
+.day-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 .meal-section {
     margin-top: 0.5rem;
 }
@@ -90,8 +95,10 @@ button:hover {
     border-radius: 8px;
     margin-bottom: 1rem;
 }
+.fasting-checkboxes {
+    display: flex;
+    gap: 1rem;
+}
 .fasting-checkbox {
-    display: block;
-    margin-top: 1rem;
     cursor: pointer;
 }

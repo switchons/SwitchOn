@@ -57,7 +57,17 @@ function generateCalendar(startDate) {
             const dayDiv = document.createElement('div');
             dayDiv.className = 'day';
             dayDiv.innerHTML = `
-                <h4>${currentDate.toLocaleDateString()} - ${week * 7 + day + 1}일차</h4>
+                <div class="day-header">
+                    <h4>${currentDate.toLocaleDateString()} - ${week * 7 + day + 1}일차</h4>
+                    <div class="fasting-checkboxes">
+                        <label class="fasting-checkbox">
+                            <input type="checkbox" class="fasting-checkbox" data-week="${week + 1}" data-day="${day + 1}" data-period="점점"> 점점
+                        </label>
+                        <label class="fasting-checkbox">
+                            <input type="checkbox" class="fasting-checkbox" data-week="${week + 1}" data-day="${day + 1}" data-period="저저"> 저저
+                        </label>
+                    </div>
+                </div>
                 <div class="meal-section">
                     <h5>아침</h5>
                     ${getMealPlan(week, day, 'breakfast')}
@@ -73,14 +83,6 @@ function generateCalendar(startDate) {
                 <div class="meal-section">
                     <h5>저녁</h5>
                     ${getMealPlan(week, day, 'dinner')}
-                </div>
-                <div class="fasting-checkbox">
-                    <label>
-                        <input type="checkbox" class="fasting-checkbox" data-week="${week + 1}" data-day="${day + 1}" data-period="점점"> 단식 - 점점
-                    </label>
-                    <label>
-                        <input type="checkbox" class="fasting-checkbox" data-week="${week + 1}" data-day="${day + 1}" data-period="저저"> 단식 - 저저
-                    </label>
                 </div>
             `;
             weekDiv.appendChild(dayDiv);
@@ -170,7 +172,14 @@ function handleFastingCheckboxChange(week, day, period, isChecked) {
         const mealIndex = currentDayIndex + index;
         const mealCheckbox = document.querySelector(`.day:nth-child(${mealIndex + 1}) .meal-section input[data-meal="week${Math.floor(mealIndex / 7) + 1}-day${mealIndex % 7 + 1}-${meal}"]`);
         if (mealCheckbox) {
-            mealCheckbox.checked = isChecked;
+            if (isChecked) {
+                mealCheckbox.parentElement.innerHTML = "단식";
+            } else {
+                mealCheckbox.parentElement.innerHTML = `<label><input type="checkbox" class="meal-checkbox" data-meal="week${Math.floor(mealIndex / 7) + 1}-day${mealIndex % 7 + 1}-${meal}"> ${mealCheckbox.parentElement.textContent.trim()}</label>`;
+                document.querySelector(`.meal-checkbox[data-meal="week${Math.floor(mealIndex / 7) + 1}-day${mealIndex % 7 + 1}-${meal}"]`).addEventListener('change', () => {
+                    localStorage.setItem(`week${Math.floor(mealIndex / 7) + 1}-day${mealIndex % 7 + 1}-${meal}`, mealCheckbox.checked);
+                });
+            }
             localStorage.setItem(mealCheckbox.getAttribute('data-meal'), isChecked);
         }
     });
