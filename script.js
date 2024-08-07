@@ -7,7 +7,6 @@ document.getElementById('start-button').addEventListener('click', () => {
         document.getElementById('user-greeting').textContent = `${userName}님의 4주 스위치온`;
         document.getElementById('user-info').style.display = 'none';
         document.getElementById('calendar').style.display = 'block';
-        document.getElementById('fasting-settings').style.display = 'block';
         generateCalendar(new Date(startDate));
         updateUserInfo();
     } else {
@@ -19,19 +18,6 @@ document.getElementById('reset-button').addEventListener('click', () => {
     localStorage.clear();  // 모든 localStorage 데이터를 삭제
     document.getElementById('user-info').style.display = 'block';
     document.getElementById('calendar').style.display = 'none';
-    document.getElementById('fasting-settings').style.display = 'none';
-});
-
-document.getElementById('set-fasting-button').addEventListener('click', () => {
-    const fastingDate = document.getElementById('fasting-date').value;
-    const fastingType = document.getElementById('fasting-type').value;
-    if (fastingDate && fastingType) {
-        localStorage.setItem('fastingDate', fastingDate);
-        localStorage.setItem('fastingType', fastingType);
-        applyFastingSchedule(fastingDate, fastingType);
-    } else {
-        alert('단식 날짜와 방식을 선택해주세요.');
-    }
 });
 
 function generateCalendar(startDate) {
@@ -165,27 +151,6 @@ function getMealPlan(week, day, meal) {
     `;
 }
 
-function applyFastingSchedule(fastingDate, fastingType) {
-    const startDate = new Date(localStorage.getItem('startDate'));
-    const fastingDay = new Date(fastingDate);
-    const daysBetween = Math.floor((fastingDay - startDate) / (1000 * 60 * 60 * 24));
-    const weekNum = Math.floor(daysBetween / 7) + 1;
-    const dayNum = daysBetween % 7 + 1;
-    const mealTimes = fastingType === "점점" ? ["lunch", "dinner_snack", "dinner", "breakfast"] : ["dinner", "breakfast", "lunch", "dinner_snack"];
-
-    mealTimes.forEach((meal, index) => {
-        const mealDayIndex = daysBetween + index;
-        const mealWeek = Math.floor(mealDayIndex / 7) + 1;
-        const mealDay = mealDayIndex % 7 + 1;
-        const mealCheckbox = document.querySelector(`.week#week-${mealWeek} .day:nth-child(${mealDay}) .meal-section input[data-meal="week${mealWeek}-day${mealDay}-${meal}"]`);
-        const mealSection = mealCheckbox ? mealCheckbox.parentElement : null;
-
-        if (mealCheckbox && mealSection) {
-            mealSection.innerHTML = "단식";
-        }
-    });
-}
-
 function updateUserInfo() {
     const userName = localStorage.getItem('userName');
     const startDate = new Date(localStorage.getItem('startDate'));
@@ -193,7 +158,6 @@ function updateUserInfo() {
         document.getElementById('user-greeting').textContent = `${userName}님의 4주 스위치온`;
         document.getElementById('user-info').style.display = 'none';
         document.getElementById('calendar').style.display = 'block';
-        document.getElementById('fasting-settings').style.display = 'block';
 
         generateCalendar(startDate);
 
@@ -201,12 +165,6 @@ function updateUserInfo() {
             const meal = checkbox.getAttribute('data-meal');
             checkbox.checked = localStorage.getItem(meal) === 'true';
         });
-
-        const fastingDate = localStorage.getItem('fastingDate');
-        const fastingType = localStorage.getItem('fastingType');
-        if (fastingDate && fastingType) {
-            applyFastingSchedule(fastingDate, fastingType);
-        }
     }
 }
 
