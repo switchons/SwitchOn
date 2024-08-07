@@ -170,20 +170,21 @@ function handleFastingCheckboxChange(week, day, period, isChecked) {
     const mealsToChange = mealTimes[period];
     mealsToChange.forEach((meal, index) => {
         const mealIndex = currentDayIndex + index;
-        const weekNum = Math.floor(mealIndex / 7) + 1;
-        const dayNum = mealIndex % 7 + 1;
-        const mealCheckbox = document.querySelector(`.day:nth-child(${dayNum}) .meal-section input[data-meal="week${weekNum}-day${dayNum}-${meal}"]`);
-        const mealSection = mealCheckbox.parentElement;
-        if (mealCheckbox) {
+        const mealWeek = Math.floor(mealIndex / 7) + 1;
+        const mealDay = mealIndex % 7 + 1;
+        const mealCheckbox = document.querySelector(`.week#week-${mealWeek} .day:nth-child(${mealDay}) .meal-section input[data-meal="week${mealWeek}-day${mealDay}-${meal}"]`);
+        const mealSection = mealCheckbox ? mealCheckbox.parentElement : null;
+
+        if (mealCheckbox && mealSection) {
             if (isChecked) {
                 mealSection.innerHTML = "단식";
             } else {
-                mealSection.innerHTML = `<label><input type="checkbox" class="meal-checkbox" data-meal="week${weekNum}-day${dayNum}-${meal}"> ${getMealPlanText(weekNum, dayNum, meal)}</label>`;
-                document.querySelector(`.meal-checkbox[data-meal="week${weekNum}-day${dayNum}-${meal}"]`).addEventListener('change', () => {
-                    localStorage.setItem(`week${weekNum}-day${dayNum}-${meal}`, mealCheckbox.checked);
+                mealSection.innerHTML = `<label><input type="checkbox" class="meal-checkbox" data-meal="week${mealWeek}-day${mealDay}-${meal}"> ${getMealPlanText(mealWeek, mealDay, meal)}</label>`;
+                document.querySelector(`.meal-checkbox[data-meal="week${mealWeek}-day${mealDay}-${meal}"]`).addEventListener('change', () => {
+                    localStorage.setItem(`week${mealWeek}-day${mealDay}-${meal}`, mealCheckbox.checked);
                 });
             }
-            localStorage.setItem(`week${weekNum}-day${dayNum}-${meal}`, isChecked);
+            localStorage.setItem(`week${mealWeek}-day${mealDay}-${meal}`, isChecked);
         }
     });
 }
