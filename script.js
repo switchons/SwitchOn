@@ -20,6 +20,7 @@ function generateCalendar(startDate) {
     for (let week = 0; week < 4; week++) {
         const weekDiv = document.createElement('div');
         weekDiv.className = 'week';
+        weekDiv.id = `week-${week + 1}`;
         weekDiv.innerHTML = `<h3>${week + 1}주차</h3>`;
         for (let day = 0; day < 7; day++) {
             const currentDate = new Date(startDate);
@@ -30,21 +31,39 @@ function generateCalendar(startDate) {
                 <h4>${currentDate.toLocaleDateString()} - ${week * 7 + day + 1}일차</h4>
                 <div class="meal-section">
                     <h5>아침</h5>
-                    <label><input type="checkbox" class="meal-checkbox" data-meal="week${week + 1}-day${day + 1}-breakfast1"> 식단 1</label>
+                    ${getMealPlan(week, day, 'breakfast')}
                 </div>
                 <div class="meal-section">
                     <h5>점심</h5>
-                    <label><input type="checkbox" class="meal-checkbox" data-meal="week${week + 1}-day${day + 1}-lunch1"> 식단 1</label>
+                    ${getMealPlan(week, day, 'lunch')}
+                </div>
+                <div class="meal-section">
+                    <h5>저녁간식</h5>
+                    ${getMealPlan(week, day, 'dinner_snack')}
                 </div>
                 <div class="meal-section">
                     <h5>저녁</h5>
-                    <label><input type="checkbox" class="meal-checkbox" data-meal="week${week + 1}-day${day + 1}-dinner1"> 식단 1</label>
+                    ${getMealPlan(week, day, 'dinner')}
                 </div>
             `;
             weekDiv.appendChild(dayDiv);
         }
         weeksContainer.appendChild(weekDiv);
     }
+
+    // 첫 번째 주차를 기본으로 표시
+    document.getElementById('week-1').classList.add('active');
+    document.querySelector('.tab-button[data-week="1"]').classList.add('active');
+
+    // 탭 클릭 이벤트 설정
+    document.querySelectorAll('.tab-button').forEach(button => {
+        button.addEventListener('click', () => {
+            document.querySelectorAll('.week').forEach(week => week.classList.remove('active'));
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`week-${button.getAttribute('data-week')}`).classList.add('active');
+            button.classList.add('active');
+        });
+    });
 
     // 체크박스 이벤트 리스너 다시 설정
     document.querySelectorAll('.meal-checkbox').forEach(checkbox => {
@@ -54,6 +73,18 @@ function generateCalendar(startDate) {
     });
 
     updateUserInfo(); // 기존 상태 업데이트
+}
+
+function getMealPlan(week, day, meal) {
+    if (week === 0 && day <= 2) {
+        return `
+            <label><input type="checkbox" class="meal-checkbox" data-meal="week${week + 1}-day${day + 1}-${meal}"> 단백질 쉐이크</label>
+        `;
+    }
+    // 나머지 주차 및 일차에 따른 식단 계획을 여기에 추가할 수 있습니다.
+    return `
+        <label><input type="checkbox" class="meal-checkbox" data-meal="week${week + 1}-day${day + 1}-${meal}"> 기본 식단</label>
+    `;
 }
 
 function updateUserInfo() {
@@ -73,4 +104,4 @@ function updateUserInfo() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', updateUserInfo);
+document.addEventListener('DOMContentLoaded',
