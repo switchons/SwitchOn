@@ -14,6 +14,13 @@ document.getElementById('start-button').addEventListener('click', () => {
     }
 });
 
+document.getElementById('reset-button').addEventListener('click', () => {
+    localStorage.removeItem('userName');
+    localStorage.removeItem('startDate');
+    document.getElementById('user-info').style.display = 'block';
+    document.getElementById('calendar').style.display = 'none';
+});
+
 function generateCalendar(startDate) {
     const weeksContainer = document.getElementById('weeks-container');
     weeksContainer.innerHTML = ''; // 기존 내용 삭제
@@ -24,9 +31,9 @@ function generateCalendar(startDate) {
         if (week === 0) {
             weekDiv.innerHTML = `
                 <div class="week-info">
-                    <p>배고프면 오이, 두부, 무가당요거트, 녹황색 채소는 허용!</p>
-                    <p>하루에 물을 1.5~2L 정도 마시기!</p>
-                    <p>아침저녁으로 유산균을 섭취하는 것이 좋아요!</p>
+                    <p>허용식품 : 오이, 두부, 무가당요거트, 녹황색 채소</p>
+                    <p>하루에 물을 1.5~2L 정도 마시기</p>
+                    <p>아침저녁으로 유산균을 섭취하는 것이 좋아요</p>
                     <p>최소 6시간 수면을 지키세요.</p>
                     <p>취침 2~4시간 전에 저녁 식사를 마치고, 저녁과 다음날 아침 사이에 12~14시간 공복을 유지하세요.</p>
                     <p>많이 힘들면 바로 4일차로 넘어가세요.</p>
@@ -36,8 +43,7 @@ function generateCalendar(startDate) {
         } else if (week === 0 && day >= 3) {
             weekDiv.innerHTML = `
                 <div class="week-info">
-                    <p>배고프면 오이, 두부, 무가당요거트, 녹황색 채소는 허용!</p>
-                    <p>4~7일차 허용 식품: 잡곡밥 1/2 혹은 쌀밥 1/3, 생선, 회, 해산물, 닭가슴살, 달걀, 버섯, 미역, 각종 비타민 섭취</p>
+                    <p>4~7일차 추가 허용 식품: 잡곡밥 1/2 혹은 쌀밥 1/3, 생선, 회, 해산물, 닭가슴살, 달걀, 버섯, 미역</p>
                 </div>
                 <h3>${week + 1}주차</h3>
             `;
