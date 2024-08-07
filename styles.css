@@ -90,3 +90,8 @@ button:hover {
     border-radius: 8px;
     margin-bottom: 1rem;
 }
+.fasting-checkbox {
+    display: block;
+    margin-top: 1rem;
+    cursor: pointer;
+}

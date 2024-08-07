@@ -36,7 +36,15 @@ function generateCalendar(startDate) {
                     <p>최소 6시간 수면을 지키세요.</p>
                     <p>취침 2~4시간 전에 저녁 식사를 마치고, 저녁과 다음날 아침 사이에 12~14시간 공복을 유지하세요.</p>
                     <p>많이 힘들면 바로 4일차로 넘어가세요.</p>
-                    <p>4~7일차 허용 식품: 잡곡밥 1/2 혹은 쌀밥 1/3, 생선, 회, 해산물, 닭가슴살, 달걀, 버섯, 미역, 각종 비타민 섭취</p>
+                </div>
+                <h3>${week + 1}주차</h3>
+            `;
+        } else if (week === 1) {
+            weekDiv.innerHTML = `
+                <div class="week-info">
+                    <p>허용식품: 콩, 견과류 한 줌, 블랙커피 (오전 중 한잔)</p>
+                    <p>주 1회 간헐적 단식. 탄수화물 제한식: 채소 + 양질의 단백질음식</p>
+                    <p>금지음식: 밀가루, 설탕, 과일</p>
                 </div>
                 <h3>${week + 1}주차</h3>
             `;
@@ -66,6 +74,14 @@ function generateCalendar(startDate) {
                     <h5>저녁</h5>
                     ${getMealPlan(week, day, 'dinner')}
                 </div>
+                <div class="fasting-checkbox">
+                    <label>
+                        <input type="checkbox" class="fasting-checkbox" data-week="${week + 1}" data-day="${day + 1}" data-period="점점"> 단식 - 점점
+                    </label>
+                    <label>
+                        <input type="checkbox" class="fasting-checkbox" data-week="${week + 1}" data-day="${day + 1}" data-period="저저"> 단식 - 저저
+                    </label>
+                </div>
             `;
             weekDiv.appendChild(dayDiv);
         }
@@ -92,6 +108,16 @@ function generateCalendar(startDate) {
             localStorage.setItem(checkbox.getAttribute('data-meal'), checkbox.checked);
         });
     });
+
+    // 단식 체크박스 이벤트 리스너 설정
+    document.querySelectorAll('.fasting-checkbox input').forEach(checkbox => {
+        checkbox.addEventListener('change', () => {
+            const week = checkbox.getAttribute('data-week');
+            const day = checkbox.getAttribute('data-day');
+            const period = checkbox.getAttribute('data-period');
+            handleFastingCheckboxChange(week, day, period, checkbox.checked);
+        });
+    });
 }
 
 function getMealPlan(week, day, meal) {
@@ -111,10 +137,43 @@ function getMealPlan(week, day, meal) {
             `;
         }
     }
+    if (week === 1) {
+        if (meal === 'breakfast' || meal === 'dinner_snack') {
+            return `
+                <label><input type="checkbox" class="meal-checkbox" data-meal="week${week + 1}-day${day + 1}-${meal}"> 단백질 쉐이크</label>
+            `;
+        } else if (meal === 'lunch') {
+            return `
+                <label><input type="checkbox" class="meal-checkbox" data-meal="week${week + 1}-day${day + 1}-${meal}"> 저탄수화물식</label>
+            `;
+        } else {
+            return `
+                <label><input type="checkbox" class="meal-checkbox" data-meal="week${week + 1}-day${day + 1}-${meal}"> 탄수화물 제한식</label>
+            `;
+        }
+    }
     // 나머지 주차 및 일차에 따른 식단 계획을 여기에 추가할 수 있습니다.
     return `
         <label><input type="checkbox" class="meal-checkbox" data-meal="week${week + 1}-day${day + 1}-${meal}"> 기본 식단</label>
     `;
+}
+
+function handleFastingCheckboxChange(week, day, period, isChecked) {
+    const currentDayIndex = (week - 1) * 7 + (day - 1);
+    const mealTimes = {
+        "점점": ["dinner_snack", "dinner", "breakfast"],
+        "저저": ["breakfast", "lunch", "dinner_snack"]
+    };
+
+    const mealsToChange = mealTimes[period];
+    mealsToChange.forEach((meal, index) => {
+        const mealIndex = currentDayIndex + index;
+        const mealCheckbox = document.querySelector(`.day:nth-child(${mealIndex + 1}) .meal-section input[data-meal="week${Math.floor(mealIndex / 7) + 1}-day${mealIndex % 7 + 1}-${meal}"]`);
+        if (mealCheckbox) {
+            mealCheckbox.checked = isChecked;
+            localStorage.setItem(mealCheckbox.getAttribute('data-meal'), isChecked);
+        }
+    });
 }
 
 function updateUserInfo() {
@@ -130,6 +189,17 @@ function updateUserInfo() {
         document.querySelectorAll('.meal-checkbox').forEach(checkbox => {
             const meal = checkbox.getAttribute('data-meal');
             checkbox.checked = localStorage.getItem(meal) === 'true';
+        });
+
+        document.querySelectorAll('.fasting-checkbox input').forEach(checkbox => {
+            const week = checkbox.getAttribute('data-week');
+            const day = checkbox.getAttribute('data-day');
+            const period = checkbox.getAttribute('data-period');
+            const isChecked = localStorage.getItem(`fasting-week${week}-day${day}-${period}`) === 'true';
+            checkbox.checked = isChecked;
+            if (isChecked) {
+                handleFastingCheckboxChange(week, day, period, isChecked);
+            }
         });
     }
 }
