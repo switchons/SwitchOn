@@ -173,11 +173,12 @@ function handleFastingCheckboxChange(week, day, period, isChecked) {
         const weekNum = Math.floor(mealIndex / 7) + 1;
         const dayNum = mealIndex % 7 + 1;
         const mealCheckbox = document.querySelector(`.day:nth-child(${dayNum}) .meal-section input[data-meal="week${weekNum}-day${dayNum}-${meal}"]`);
+        const mealSection = mealCheckbox.parentElement;
         if (mealCheckbox) {
             if (isChecked) {
-                mealCheckbox.parentElement.innerHTML = "단식";
+                mealSection.innerHTML = "단식";
             } else {
-                mealCheckbox.parentElement.innerHTML = `<label><input type="checkbox" class="meal-checkbox" data-meal="week${weekNum}-day${dayNum}-${meal}"> ${getMealPlanText(weekNum, dayNum, meal)}</label>`;
+                mealSection.innerHTML = `<label><input type="checkbox" class="meal-checkbox" data-meal="week${weekNum}-day${dayNum}-${meal}"> ${getMealPlanText(weekNum, dayNum, meal)}</label>`;
                 document.querySelector(`.meal-checkbox[data-meal="week${weekNum}-day${dayNum}-${meal}"]`).addEventListener('change', () => {
                     localStorage.setItem(`week${weekNum}-day${dayNum}-${meal}`, mealCheckbox.checked);
                 });
