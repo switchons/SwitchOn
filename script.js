@@ -30,7 +30,7 @@ function generateCalendar(startDate) {
         if (week === 0) {
             weekDiv.innerHTML = `
                 <div class="week-info">
-                    <p>배고프면 오이, 두부, 무가당요거트, 녹황색 채소는 허용!</p>
+                    <p>배고프면 오이, 두부, 무가당요거트, 녹황색 채소, 수육은 허용!</p>
                     <p>하루에 물을 1.5~2L 정도 마시기!</p>
                     <p>아침저녁으로 유산균을 섭취하는 것이 좋아요!</p>
                     <p>최소 6시간 수면을 지키세요.</p>
@@ -45,6 +45,15 @@ function generateCalendar(startDate) {
                     <p>허용식품: 콩, 견과류 한 줌, 블랙커피 (오전 중 한잔)</p>
                     <p>주 1회 간헐적 단식. 탄수화물 제한식: 채소 + 양질의 단백질음식</p>
                     <p>금지음식: 밀가루, 설탕, 과일</p>
+                </div>
+                <h3>${week + 1}주차</h3>
+            `;
+        } else if (week === 2) {
+            weekDiv.innerHTML = `
+                <div class="week-info">
+                    <p>허용식품: 소고기, 단호박, 토마토, 방울토마토, 밤, 베리류 과일</p>
+                    <p>바나나, 고구마는 1개만</p>
+                    <p>주 2회 단식</p>
                 </div>
                 <h3>${week + 1}주차</h3>
             `;
@@ -139,7 +148,7 @@ function getMealPlan(week, day, meal) {
             `;
         }
     }
-    if (week === 1) {
+    if (week === 1 || week === 2) {
         if (meal === 'breakfast' || meal === 'dinner_snack') {
             return `
                 <label><input type="checkbox" class="meal-checkbox" data-meal="week${week + 1}-day${day + 1}-${meal}"> 단백질 쉐이크</label>
@@ -190,12 +199,19 @@ function handleFastingCheckboxChange(week, day, period, isChecked) {
 }
 
 function getMealPlanText(week, day, meal) {
-    if (week === 1 && (meal === 'breakfast' || meal === 'dinner_snack')) {
+    if ((week === 1 || week === 2) && (meal === 'breakfast' || meal === 'dinner_snack')) {
         return '단백질 쉐이크';
-    } else if (week === 1 && meal === 'lunch') {
+    } else if ((week === 1 || week === 2) && meal === 'lunch') {
         return '저탄수화물식';
-    } else if (week === 1 && meal === 'dinner') {
+    } else if ((week === 1 || week === 2) && meal === 'dinner') {
         return '탄수화물 제한식';
+    }
+    if (week === 0 && day <= 2) {
+        return '단백질 쉐이크';
+    } else if (week === 0 && day >= 3 && meal === 'lunch') {
+        return '저탄수화물식';
+    } else if (week === 0 && day >= 3) {
+        return '단백질 쉐이크';
     }
     // 나머지 주차 및 일차에 따른 식단 계획을 여기에 추가할 수 있습니다.
     return '기본 식단';
