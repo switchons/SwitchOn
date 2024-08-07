@@ -57,8 +57,20 @@ function generateCalendar(startDate) {
                 </div>
                 <h3>${week + 1}주차</h3>
             `;
+        } else if (week === 3) {
+            weekDiv.innerHTML = `
+                <div class="week-info">
+                    <p>저녁식사에 밥이 허용된다. 단, 밥은 반 공기를 넘지 않도록 하고 채소와 단백질 반찬으로 먼저 배를 반쯤 채운 후 밥을 먹는다.</p>
+                    <p>채소와 단백질 음식만으로 저녁식사를 해도 괜찮다.</p>
+                    <p>과일이 허용된다. 단, 종류에 관계없이 하루 1개를 넘기지 않는다.</p>
+                    <p>가급적 아침에 섭취하고 점심식사 후에는 먹지 않는 것이 좋다.</p>
+                    <p>주 3회 24시간 단식을 시행한다. 단식일 사이에 일반 식사를 하는 날이 반드시 포함되어야 한다.</p>
+                    <p>간헐적 단식을 하는 날 운동을 하면 효과가 배가 된다.</p>
+                </div>
+                <h3>${week + 1}주차</h3>
+            `;
         } else {
-            weekDiv.innerHTML = `<h3>${week + 1}주차</h3>`;
+            weekDiv.innerHTML = `<h3>${week + 1}주차</h4>`;
         }
         for (let day = 0; day < 7; day++) {
             const currentDate = new Date(startDate);
@@ -142,6 +154,17 @@ function getMealPlan(week, day, meal) {
         } else {
             return `
                 <label><input type="checkbox" class="meal-checkbox" data-meal="week${week + 1}-day${day + 1}-${meal}"> 탄수화물 제한식</label>
+            `;
+        }
+    }
+    if (week === 3) {
+        if (meal === 'breakfast' || meal === 'dinner_snack') {
+            return `
+                <label><input type="checkbox" class="meal-checkbox" data-meal="week${week + 1}-day${day + 1}-${meal}"> 단백질 쉐이크</label>
+            `;
+        } else {
+            return `
+                <label><input type="checkbox" class="meal-checkbox" data-meal="week${week + 1}-day${day + 1}-${meal}"> 일반식</label>
             `;
         }
     }
