@@ -7,6 +7,7 @@ document.getElementById('start-button').addEventListener('click', () => {
         document.getElementById('user-greeting').textContent = `${userName}님의 4주 스위치온`;
         document.getElementById('user-info').style.display = 'none';
         document.getElementById('calendar').style.display = 'block';
+        document.getElementById('fasting-settings').style.display = 'block';
         generateCalendar(new Date(startDate));
         updateUserInfo();
     } else {
@@ -18,6 +19,19 @@ document.getElementById('reset-button').addEventListener('click', () => {
     localStorage.clear();  // 모든 localStorage 데이터를 삭제
     document.getElementById('user-info').style.display = 'block';
     document.getElementById('calendar').style.display = 'none';
+    document.getElementById('fasting-settings').style.display = 'none';
+});
+
+document.getElementById('set-fasting-button').addEventListener('click', () => {
+    const fastingDate = document.getElementById('fasting-date').value;
+    const fastingType = document.getElementById('fasting-type').value;
+    if (fastingDate && fastingType) {
+        localStorage.setItem('fastingDate', fastingDate);
+        localStorage.setItem('fastingType', fastingType);
+        applyFastingSchedule(fastingDate, fastingType);
+    } else {
+        alert('단식 날짜와 방식을 선택해주세요.');
+    }
 });
 
 function generateCalendar(startDate) {
@@ -68,14 +82,6 @@ function generateCalendar(startDate) {
             dayDiv.innerHTML = `
                 <div class="day-header">
                     <h4>${currentDate.toLocaleDateString()} - ${week * 7 + day + 1}일차</h4>
-                    <div class="fasting-checkboxes">
-                        <label class="fasting-checkbox">
-                            <input type="checkbox" class="fasting-checkbox" data-week="${week + 1}" data-day="${day + 1}" data-period="점점"> 점점
-                        </label>
-                        <label class="fasting-checkbox">
-                            <input type="checkbox" class="fasting-checkbox" data-week="${week + 1}" data-day="${day + 1}" data-period="저저"> 저저
-                        </label>
-                    </div>
                 </div>
                 <div class="meal-section">
                     <h5>아침</h5>
@@ -119,16 +125,6 @@ function generateCalendar(startDate) {
             localStorage.setItem(checkbox.getAttribute('data-meal'), checkbox.checked);
         });
     });
-
-    // 단식 체크박스 이벤트 리스너 설정
-    document.querySelectorAll('.fasting-checkbox input').forEach(checkbox => {
-        checkbox.addEventListener('change', () => {
-            const week = checkbox.getAttribute('data-week');
-            const day = checkbox.getAttribute('data-day');
-            const period = checkbox.getAttribute('data-period');
-            handleFastingCheckboxChange(week, day, period, checkbox.checked);
-        });
-    });
 }
 
 function getMealPlan(week, day, meal) {
@@ -169,52 +165,25 @@ function getMealPlan(week, day, meal) {
     `;
 }
 
-function handleFastingCheckboxChange(week, day, period, isChecked) {
-    const currentDayIndex = (week - 1) * 7 + (day - 1);
-    const mealTimes = {
-        "점점": ["dinner_snack", "dinner", "breakfast"],
-        "저저": ["breakfast", "lunch", "dinner_snack"]
-    };
+function applyFastingSchedule(fastingDate, fastingType) {
+    const startDate = new Date(localStorage.getItem('startDate'));
+    const fastingDay = new Date(fastingDate);
+    const daysBetween = Math.floor((fastingDay - startDate) / (1000 * 60 * 60 * 24));
+    const weekNum = Math.floor(daysBetween / 7) + 1;
+    const dayNum = daysBetween % 7 + 1;
+    const mealTimes = fastingType === "점점" ? ["lunch", "dinner_snack", "dinner", "breakfast"] : ["dinner", "breakfast", "lunch", "dinner_snack"];
 
-    const mealsToChange = mealTimes[period];
-    mealsToChange.forEach((meal, index) => {
-        const mealIndex = currentDayIndex + index;
-        const mealWeek = Math.floor(mealIndex / 7) + 1;
-        const mealDay = mealIndex % 7 + 1;
+    mealTimes.forEach((meal, index) => {
+        const mealDayIndex = dayNum + index;
+        const mealWeek = Math.floor(mealDayIndex / 7) + 1;
+        const mealDay = mealDayIndex % 7 + 1;
         const mealCheckbox = document.querySelector(`.week#week-${mealWeek} .day:nth-child(${mealDay}) .meal-section input[data-meal="week${mealWeek}-day${mealDay}-${meal}"]`);
         const mealSection = mealCheckbox ? mealCheckbox.parentElement : null;
 
         if (mealCheckbox && mealSection) {
-            if (isChecked) {
-                mealSection.innerHTML = "단식";
-            } else {
-                mealSection.innerHTML = `<label><input type="checkbox" class="meal-checkbox" data-meal="week${mealWeek}-day${mealDay}-${meal}"> ${getMealPlanText(mealWeek, mealDay, meal)}</label>`;
-                document.querySelector(`.meal-checkbox[data-meal="week${mealWeek}-day${mealDay}-${meal}"]`).addEventListener('change', () => {
-                    localStorage.setItem(`week${mealWeek}-day${mealDay}-${meal}`, mealCheckbox.checked);
-                });
-            }
-            localStorage.setItem(`week${mealWeek}-day${mealDay}-${meal}`, isChecked);
+            mealSection.innerHTML = "단식";
         }
     });
-}
-
-function getMealPlanText(week, day, meal) {
-    if ((week === 1 || week === 2) && (meal === 'breakfast' || meal === 'dinner_snack')) {
-        return '단백질 쉐이크';
-    } else if ((week === 1 || week === 2) && meal === 'lunch') {
-        return '저탄수화물식';
-    } else if ((week === 1 || week === 2) && meal === 'dinner') {
-        return '탄수화물 제한식';
-    }
-    if (week === 0 && day <= 2) {
-        return '단백질 쉐이크';
-    } else if (week === 0 && day >= 3 && meal === 'lunch') {
-        return '저탄수화물식';
-    } else if (week === 0 && day >= 3) {
-        return '단백질 쉐이크';
-    }
-    // 나머지 주차 및 일차에 따른 식단 계획을 여기에 추가할 수 있습니다.
-    return '기본 식단';
 }
 
 function updateUserInfo() {
@@ -224,6 +193,7 @@ function updateUserInfo() {
         document.getElementById('user-greeting').textContent = `${userName}님의 4주 스위치온`;
         document.getElementById('user-info').style.display = 'none';
         document.getElementById('calendar').style.display = 'block';
+        document.getElementById('fasting-settings').style.display = 'block';
 
         generateCalendar(startDate);
 
@@ -232,16 +202,11 @@ function updateUserInfo() {
             checkbox.checked = localStorage.getItem(meal) === 'true';
         });
 
-        document.querySelectorAll('.fasting-checkbox input').forEach(checkbox => {
-            const week = checkbox.getAttribute('data-week');
-            const day = checkbox.getAttribute('data-day');
-            const period = checkbox.getAttribute('data-period');
-            const isChecked = localStorage.getItem(`fasting-week${week}-day${day}-${period}`) === 'true';
-            checkbox.checked = isChecked;
-            if (isChecked) {
-                handleFastingCheckboxChange(week, day, period, isChecked);
-            }
-        });
+        const fastingDate = localStorage.getItem('fastingDate');
+        const fastingType = localStorage.getItem('fastingType');
+        if (fastingDate && fastingType) {
+            applyFastingSchedule(fastingDate, fastingType);
+        }
     }
 }
 
