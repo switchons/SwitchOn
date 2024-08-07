@@ -4,7 +4,7 @@ document.getElementById('start-button').addEventListener('click', () => {
     if (userName && startDate) {
         localStorage.setItem('userName', userName);
         localStorage.setItem('startDate', startDate);
-        document.getElementById('user-greeting').textContent = `${userName}님의 4주 다이어트 식단 계획`;
+        document.getElementById('user-greeting').textContent = `${userName}님의 4주 스위치온`;
         document.getElementById('user-info').style.display = 'none';
         document.getElementById('calendar').style.display = 'block';
         generateCalendar(new Date(startDate));
@@ -91,7 +91,7 @@ function updateUserInfo() {
     const userName = localStorage.getItem('userName');
     const startDate = new Date(localStorage.getItem('startDate'));
     if (userName && startDate) {
-        document.getElementById('user-greeting').textContent = `${userName}님의 4주 다이어트 식단 계획`;
+        document.getElementById('user-greeting').textContent = `${userName}님의 4주 스위치온`;
         document.getElementById('user-info').style.display = 'none';
         document.getElementById('calendar').style.display = 'block';
 
@@ -104,4 +104,4 @@ function updateUserInfo() {
     }
 }
 
-document.addEventListener('DOMContentLoaded',
+document.addEventListener('DOMContentLoaded', updateUserInfo);
