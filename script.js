@@ -21,7 +21,16 @@ function generateCalendar(startDate) {
         const weekDiv = document.createElement('div');
         weekDiv.className = 'week';
         weekDiv.id = `week-${week + 1}`;
-        weekDiv.innerHTML = `<h3>${week + 1}주차</h3>`;
+        if (week === 0) {
+            weekDiv.innerHTML = `
+                <div class="week-info">
+                    <p>배고프면 오이, 두부, 무가당요거트, 녹황색 채소는 허용됩니다. 하루에 물을 1.5~2L 정도 섭취하고, 아침저녁으로 유산균을 섭취하는 것이 좋습니다. 최소 6시간 수면을 지키고, 취침 2~4시간 전에 저녁 식사를 마치고, 저녁과 다음날 아침 사이에 12~14시간 공복을 유지하세요.</p>
+                </div>
+                <h3>${week + 1}주차</h3>
+            `;
+        } else {
+            weekDiv.innerHTML = `<h3>${week + 1}주차</h3>`;
+        }
         for (let day = 0; day < 7; day++) {
             const currentDate = new Date(startDate);
             currentDate.setDate(startDate.getDate() + (week * 7) + day);
