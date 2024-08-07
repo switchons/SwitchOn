@@ -170,19 +170,33 @@ function handleFastingCheckboxChange(week, day, period, isChecked) {
     const mealsToChange = mealTimes[period];
     mealsToChange.forEach((meal, index) => {
         const mealIndex = currentDayIndex + index;
-        const mealCheckbox = document.querySelector(`.day:nth-child(${mealIndex + 1}) .meal-section input[data-meal="week${Math.floor(mealIndex / 7) + 1}-day${mealIndex % 7 + 1}-${meal}"]`);
+        const weekNum = Math.floor(mealIndex / 7) + 1;
+        const dayNum = mealIndex % 7 + 1;
+        const mealCheckbox = document.querySelector(`.day:nth-child(${dayNum}) .meal-section input[data-meal="week${weekNum}-day${dayNum}-${meal}"]`);
         if (mealCheckbox) {
             if (isChecked) {
                 mealCheckbox.parentElement.innerHTML = "단식";
             } else {
-                mealCheckbox.parentElement.innerHTML = `<label><input type="checkbox" class="meal-checkbox" data-meal="week${Math.floor(mealIndex / 7) + 1}-day${mealIndex % 7 + 1}-${meal}"> ${mealCheckbox.parentElement.textContent.trim()}</label>`;
-                document.querySelector(`.meal-checkbox[data-meal="week${Math.floor(mealIndex / 7) + 1}-day${mealIndex % 7 + 1}-${meal}"]`).addEventListener('change', () => {
-                    localStorage.setItem(`week${Math.floor(mealIndex / 7) + 1}-day${mealIndex % 7 + 1}-${meal}`, mealCheckbox.checked);
+                mealCheckbox.parentElement.innerHTML = `<label><input type="checkbox" class="meal-checkbox" data-meal="week${weekNum}-day${dayNum}-${meal}"> ${getMealPlanText(weekNum, dayNum, meal)}</label>`;
+                document.querySelector(`.meal-checkbox[data-meal="week${weekNum}-day${dayNum}-${meal}"]`).addEventListener('change', () => {
+                    localStorage.setItem(`week${weekNum}-day${dayNum}-${meal}`, mealCheckbox.checked);
                 });
             }
-            localStorage.setItem(mealCheckbox.getAttribute('data-meal'), isChecked);
+            localStorage.setItem(`week${weekNum}-day${dayNum}-${meal}`, isChecked);
         }
     });
+}
+
+function getMealPlanText(week, day, meal) {
+    if (week === 1 && (meal === 'breakfast' || meal === 'dinner_snack')) {
+        return '단백질 쉐이크';
+    } else if (week === 1 && meal === 'lunch') {
+        return '저탄수화물식';
+    } else if (week === 1 && meal === 'dinner') {
+        return '탄수화물 제한식';
+    }
+    // 나머지 주차 및 일차에 따른 식단 계획을 여기에 추가할 수 있습니다.
+    return '기본 식단';
 }
 
 function updateUserInfo() {
