@@ -174,7 +174,7 @@ function applyFastingSchedule(fastingDate, fastingType) {
     const mealTimes = fastingType === "점점" ? ["lunch", "dinner_snack", "dinner", "breakfast"] : ["dinner", "breakfast", "lunch", "dinner_snack"];
 
     mealTimes.forEach((meal, index) => {
-        const mealDayIndex = dayNum + index;
+        const mealDayIndex = daysBetween + index;
         const mealWeek = Math.floor(mealDayIndex / 7) + 1;
         const mealDay = mealDayIndex % 7 + 1;
         const mealCheckbox = document.querySelector(`.week#week-${mealWeek} .day:nth-child(${mealDay}) .meal-section input[data-meal="week${mealWeek}-day${mealDay}-${meal}"]`);

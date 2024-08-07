@@ -95,13 +95,6 @@ button:hover {
     border-radius: 8px;
     margin-bottom: 1rem;
 }
-.fasting-checkboxes {
-    display: flex;
-    gap: 1rem;
-}
-.fasting-checkbox {
-    cursor: pointer;
-}
 #fasting-settings {
     margin-top: 1rem;
     padding: 1rem;
