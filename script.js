@@ -71,8 +71,6 @@ function generateCalendar(startDate) {
             localStorage.setItem(checkbox.getAttribute('data-meal'), checkbox.checked);
         });
     });
-
-    updateUserInfo(); // 기존 상태 업데이트
 }
 
 function getMealPlan(week, day, meal) {
