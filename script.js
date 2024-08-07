@@ -15,8 +15,7 @@ document.getElementById('start-button').addEventListener('click', () => {
 });
 
 document.getElementById('reset-button').addEventListener('click', () => {
-    localStorage.removeItem('userName');
-    localStorage.removeItem('startDate');
+    localStorage.clear();  // 모든 localStorage 데이터를 삭제
     document.getElementById('user-info').style.display = 'block';
     document.getElementById('calendar').style.display = 'none';
 });
